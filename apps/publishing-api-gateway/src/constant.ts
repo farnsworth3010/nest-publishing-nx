@@ -1,0 +1,9 @@
+export const AUTHOR_CLIENT = Symbol('AUTHOR_CLIENT');
+export const BOOK_CLIENT = Symbol('BOOK_CLIENT');
+export const BOOK_MATERIAL_CLIENT = Symbol('BOOK_MATERIAL_CLIENT');
+export const CATEGORY_CLIENT = Symbol('CATEGORY_CLIENT');
+export const MATERIAL_CLIENT = Symbol('MATERIAL_CLIENT');
+export const OFFICE_CLIENT = Symbol('OFFICE_CLIENT');
+export const ROLE_CLIENT = Symbol('ROLE_CLIENT');
+export const SALE_CLIENT = Symbol('SALE_CLIENT');
+export const USER_CLIENT = Symbol('USER_CLIENT');

@@ -1,0 +1,7 @@
+export const ROLE_PATTERNS = {
+  FIND_ALL: 'FIND_ALL',
+  FIND_ONE: 'FIND_ONE',
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  REMOVE: 'REMOVE',
+};

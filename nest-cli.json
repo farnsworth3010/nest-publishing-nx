@@ -1,8 +1,50 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/publishing-api-gateway/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/publishing-api-gateway/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/publishing-api-gateway",
+  "projects": {
+    "book": {
+      "type": "application",
+      "root": "apps/book",
+      "entryFile": "main",
+      "sourceRoot": "apps/book",
+      "compilerOptions": {
+        "tsConfigPath": "apps/book/tsconfig.app.json"
+      }
+    },
+    "contracts": {
+      "type": "library",
+      "root": "libs/contracts",
+      "entryFile": "index",
+      "sourceRoot": "libs/contracts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
+      }
+    },
+    "publishing-api-gateway": {
+      "type": "application",
+      "root": "apps/publishing-api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/publishing-api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/publishing-api-gateway/tsconfig.app.json"
+      }
+    },
+    "user": {
+      "type": "application",
+      "root": "apps/user",
+      "entryFile": "main",
+      "sourceRoot": "apps/user",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user/tsconfig.app.json"
+      }
+    }
   }
 }
