@@ -1,5 +1,5 @@
-import { Material } from 'src/modules/material/entities/material.entity';
 import { EntityManager } from 'typeorm';
+import { Material } from '../../libs/contracts/src/material/material.entity';
 
 export const createMaterials = async ( manager: EntityManager ): Promise<Material[]> => {
   console.log( "Creating materials..." );

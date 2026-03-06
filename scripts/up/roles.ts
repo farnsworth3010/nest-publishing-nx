@@ -1,5 +1,5 @@
-import { Role } from 'src/modules/role/entities/role.entity';
 import { EntityManager } from 'typeorm';
+import { Role } from '../../libs/contracts/src/role/role.entity';
 
 export const createRoles = async ( manager: EntityManager ): Promise<Role[]> => {
   console.log( "Creating roles..." );

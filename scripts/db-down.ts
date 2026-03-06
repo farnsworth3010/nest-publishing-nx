@@ -1,14 +1,14 @@
 import 'dotenv/config';
-import { Author } from 'src/modules/author/entities/author.entity';
-import { BookMaterial } from 'src/modules/book-material/entities/book-material.entity';
-import { Book } from 'src/modules/book/entities/book.entity';
-import { Category } from 'src/modules/category/entities/category.entity';
-import { Material } from 'src/modules/material/entities/material.entity';
-import { Office } from 'src/modules/office/entities/office.entity';
-import { Role } from 'src/modules/role/entities/role.entity';
-import { Sale } from 'src/modules/sale/entities/sale.entity';
-import { User } from 'src/modules/user/entities/user.entity';
 import { DataSource, EntityManager } from 'typeorm';
+import { Author } from '../libs/contracts/src/author/author.entity';
+import { BookMaterial } from '../libs/contracts/src/book-material/book-material.entity';
+import { Book } from '../libs/contracts/src/book/book.entity';
+import { Category } from '../libs/contracts/src/category/category.entity';
+import { Material } from '../libs/contracts/src/material/material.entity';
+import { Office } from '../libs/contracts/src/office/office.entity';
+import { Role } from '../libs/contracts/src/role/role.entity';
+import { Sale } from '../libs/contracts/src/sale/sale.entity';
+import { User } from '../libs/contracts/src/user/user.entity';
 
 const AppDataSource = new DataSource( {
   type: 'postgres',
@@ -31,7 +31,7 @@ async function init() {
 
   const manager: EntityManager = AppDataSource.manager;
 
-  const entities = manager.connection.entityMetadatas;
+  const entities = AppDataSource.entityMetadatas;
   const tableNames = entities.map( ( entity ) => `"${ entity.tableName }"` ).join( ", " );
 
   // Truncate all tables with CASCADE

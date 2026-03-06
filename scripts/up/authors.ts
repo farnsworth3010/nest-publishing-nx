@@ -1,5 +1,5 @@
-import { Author } from 'src/modules/author/entities/author.entity';
 import { EntityManager } from 'typeorm';
+import { Author } from '../../libs/contracts/src/author/author.entity';
 
 export const createAuthors = async ( manager: EntityManager ): Promise<Author[]> => {
   console.log( "Creating authors..." );

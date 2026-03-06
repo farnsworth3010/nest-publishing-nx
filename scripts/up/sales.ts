@@ -1,10 +1,10 @@
 
-import { Book } from 'src/modules/book/entities/book.entity';
-import { Office } from 'src/modules/office/entities/office.entity';
-import { Sale } from 'src/modules/sale/entities/sale.entity';
-import { User } from 'src/modules/user/entities/user.entity';
-import { getRandomInt } from 'src/utils/utils';
 import { EntityManager } from 'typeorm';
+import { Book } from '../../libs/contracts/src/book/book.entity';
+import { Office } from '../../libs/contracts/src/office/office.entity';
+import { Sale } from '../../libs/contracts/src/sale/sale.entity';
+import { User } from '../../libs/contracts/src/user/user.entity';
+import { getRandomInt } from '../utils';
 
 export const createSales = async ( manager: EntityManager, books: Book[], users: User[], offices: Office[] ): Promise<Sale[]> => {
   console.log( "Creating sales..." );

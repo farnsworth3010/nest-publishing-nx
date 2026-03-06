@@ -1,5 +1,5 @@
-import { Category } from 'src/modules/category/entities/category.entity';
 import { EntityManager } from 'typeorm';
+import { Category } from '../../libs/contracts/src/category/category.entity';
 
 export const createCategories = async ( manager: EntityManager ): Promise<Category[]> => {
   console.log( "Creating categories..." );

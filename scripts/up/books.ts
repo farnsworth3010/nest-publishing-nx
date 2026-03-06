@@ -1,8 +1,8 @@
-import { Author } from 'src/modules/author/entities/author.entity';
-import { Book } from 'src/modules/book/entities/book.entity';
-import { Category } from 'src/modules/category/entities/category.entity';
-import { getRandomInt } from 'src/utils/utils';
 import { EntityManager } from 'typeorm';
+import { Author } from '../../libs/contracts/src/author/author.entity';
+import { Book } from '../../libs/contracts/src/book/book.entity';
+import { Category } from '../../libs/contracts/src/category/category.entity';
+import { getRandomInt } from '../utils';
 
 export const createBooks = async ( manager: EntityManager, categories: Category[], authors: Author[] ): Promise<Book[]> => {
   console.log( "Creating books..." );

@@ -1,5 +1,5 @@
-import { Office } from 'src/modules/office/entities/office.entity';
 import { EntityManager } from 'typeorm';
+import { Office } from '../../libs/contracts/src/office/office.entity';
 
 export const createOffices = async ( manager: EntityManager ): Promise<Office[]> => {
   console.log( "Creating offices..." );

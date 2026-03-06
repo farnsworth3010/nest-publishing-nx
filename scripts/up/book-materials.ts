@@ -1,8 +1,8 @@
-import { BookMaterial } from 'src/modules/book-material/entities/book-material.entity';
-import { Book } from 'src/modules/book/entities/book.entity';
-import { Material } from 'src/modules/material/entities/material.entity';
-import { getRandomInt } from 'src/utils/utils';
 import { EntityManager } from 'typeorm';
+import { BookMaterial } from '../../libs/contracts/src/book-material/book-material.entity';
+import { Book } from '../../libs/contracts/src/book/book.entity';
+import { Material } from '../../libs/contracts/src/material/material.entity';
+import { getRandomInt } from '../utils';
 
 export const createBookMaterials = async ( manager: EntityManager, books: Book[], materials: Material[] ): Promise<BookMaterial[]> => {
   console.log( "Creating book-material associations..." );

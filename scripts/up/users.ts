@@ -1,7 +1,7 @@
-import { Office } from 'src/modules/office/entities/office.entity';
-import { Role } from 'src/modules/role/entities/role.entity';
-import { User } from 'src/modules/user/entities/user.entity';
 import { EntityManager } from 'typeorm';
+import { Office } from '../../libs/contracts/src/office/office.entity';
+import { Role } from '../../libs/contracts/src/role/role.entity';
+import { User } from '../../libs/contracts/src/user/user.entity';
 
 export const createUsers = async ( manager: EntityManager, roles: Role[], offices: Office[] ): Promise<User[]> => {
   console.log( "Creating users..." );
