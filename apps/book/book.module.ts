@@ -16,6 +16,7 @@ import { TypeOrmConfigService } from '@config/database.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: false }),
     TypeOrmModule.forFeature([
       Book,
       Author,
@@ -27,13 +28,11 @@ import { TypeOrmConfigService } from '@config/database.config';
       User,
       Role,
     ]),
-    ConfigModule.forRoot({ isGlobal: false }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
       inject: [ConfigService],
     }),
-    // TODO: is this okay? (importing too many entities)
   ],
   controllers: [BookController],
   providers: [BookService],

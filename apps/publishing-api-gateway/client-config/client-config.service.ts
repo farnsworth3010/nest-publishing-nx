@@ -6,28 +6,15 @@ import { ClientOptions, Transport } from '@nestjs/microservices';
 export class ClientConfigService {
   constructor(private config: ConfigService) {}
 
-  getBookClientPort(): number {
-    return this.config.get<number>('BOOK_CLIENT_PORT')!;
+  getClientPort(clientId: symbol): number {
+    return this.config.get<number>(clientId.toString())!;
   }
 
-  getUserClientPort(): number {
-    return this.config.get<number>('USER_CLIENT_PORT')!;
-  }
-
-  get bookClientOptions(): ClientOptions {
+  getClientOptions(clientId: symbol): ClientOptions {
     return {
       transport: Transport.TCP,
       options: {
-        port: this.getBookClientPort(),
-      },
-    };
-  }
-
-  get userClientOptions(): ClientOptions {
-    return {
-      transport: Transport.TCP,
-      options: {
-        port: this.getUserClientPort(),
+        port: this.getClientPort(clientId),
       },
     };
   }

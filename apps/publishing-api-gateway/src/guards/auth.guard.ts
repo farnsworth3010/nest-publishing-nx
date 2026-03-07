@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '@app/gateway/user/user.service';
+import { UserService } from '@app/gateway/modules/user/user.service';
 import { map, Observable, of } from 'rxjs';
 import { UserData } from '@app/contracts/user/user.entity';
 

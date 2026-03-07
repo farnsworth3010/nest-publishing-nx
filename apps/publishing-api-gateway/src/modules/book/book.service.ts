@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { BOOK_CLIENT } from '../constant';
+import { BOOK_CLIENT } from '../../constant';
 import { BOOK_PATTERNS } from '@app/contracts/book/book.pattern';
 import { CreateBookDto } from '@app/contracts/book/create-book.dto';
 import { UpdateBookDto } from '@app/contracts/book/update-book.dto';

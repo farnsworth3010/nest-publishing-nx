@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { USER_CLIENT } from '../constant';
+import { USER_CLIENT } from '../../constant';
 import { USER_PATTERNS } from '@app/contracts/user/user.pattern';
 import { User, UserRO } from '@app/contracts/user/user.entity';
 import { LoginUserDto } from '@app/contracts/user/login-user.dto';

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { BookService } from './book.service';
 import { BookController } from './book.controller';
-import { ClientConfigModule } from '../../client-config/client-config.module';
-import { BOOK_CLIENT } from '../constant';
-import { ClientConfigService } from '../../client-config/client-config.service';
+import { ClientConfigModule } from '../../../client-config/client-config.module';
+import { BOOK_CLIENT } from '../../constant';
+import { ClientConfigService } from '../../../client-config/client-config.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
-import { UserService } from '@app/gateway/user/user.service';
-import { UserModule } from '@app/gateway/user/user.module';
+import { UserService } from '@app/gateway/modules/user/user.service';
+import { UserModule } from '@app/gateway/modules/user/user.module';
 import { JwtConfigService } from '@config/jwt.config';
 
 @Module({
@@ -27,7 +27,7 @@ import { JwtConfigService } from '@config/jwt.config';
     {
       provide: BOOK_CLIENT,
       useFactory: (configService: ClientConfigService) => {
-        const clientOptions = configService.bookClientOptions;
+        const clientOptions = configService.getClientOptions(BOOK_CLIENT);
         return ClientProxyFactory.create(clientOptions);
       },
       inject: [ClientConfigService],
