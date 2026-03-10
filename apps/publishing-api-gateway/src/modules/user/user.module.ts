@@ -1,33 +1,33 @@
-import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { USER_CLIENT } from '../../constant';
-import { ClientConfigModule } from '../../../client-config/client-config.module';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
 import { JwtConfigService } from '@config/jwt.config';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientConfigModule } from '../../../client-config/client-config.module';
+import { CLIENT_PORTS, USER_CLIENT } from '../../constant';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
-@Module({
+@Module( {
   imports: [
     ClientConfigModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
+    JwtModule.registerAsync( {
+      imports: [ ConfigModule ],
       useClass: JwtConfigService,
-    }),
+    } ),
     UserModule,
-    ClientsModule.register([
+    ClientsModule.register( [
       {
         name: USER_CLIENT,
         transport: Transport.TCP,
         options: {
-          port: 3001,
+          port: CLIENT_PORTS[ USER_CLIENT ],
         },
       },
-    ]),
+    ] ),
   ],
-  providers: [UserService],
-  controllers: [UserController],
-  exports: [ClientsModule],
-})
-export class UserModule {}
+  providers: [ UserService ],
+  controllers: [ UserController ],
+  exports: [ ClientsModule ],
+} )
+export class UserModule { }

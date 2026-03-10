@@ -1,6 +1,7 @@
+import { BOOK_CLIENT, CLIENT_PORTS } from '@app/gateway/constant';
 import { NestFactory } from '@nestjs/core';
-import { BookModule } from './book.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { BookModule } from './book.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -8,7 +9,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: 3002,
+        port: CLIENT_PORTS[ BOOK_CLIENT ],
       },
     },
   );

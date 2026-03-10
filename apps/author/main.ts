@@ -1,3 +1,4 @@
+import { AUTHOR_CLIENT, CLIENT_PORTS } from '@app/gateway/constant';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AuthorModule } from './author.module';
@@ -8,7 +9,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: 3009,
+        port: CLIENT_PORTS[ AUTHOR_CLIENT ],
       },
     },
   );

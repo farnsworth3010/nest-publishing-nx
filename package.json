@@ -20,8 +20,7 @@
     "test:e2e": "jest --config ./apps/nest-publishing-microservices/test/jest-e2e.json",
     "start:user": "nest start user --watch",
     "start:publishing-api-gateway": "nest start publishing-api-gateway --watch",
-    "start:book": "nest start book --watch",
-    "start:dev-all": "concurrently \"npm run start:user\" \"npm run start:book\" \"npm run start:publishing-api-gateway\""
+    "start:book": "nest start book --watch"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

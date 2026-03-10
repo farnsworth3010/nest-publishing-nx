@@ -1,15 +1,15 @@
-import { CLIENT_PORTS, MATERIAL_CLIENT } from '@app/gateway/constant';
+import { CLIENT_PORTS, NEWS_CLIENT } from '@app/gateway/constant';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { MaterialModule } from './material.module';
+import { NewsModule } from './news.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    MaterialModule,
+    NewsModule,
     {
       transport: Transport.TCP,
       options: {
-        port: CLIENT_PORTS[ MATERIAL_CLIENT ],
+        port: CLIENT_PORTS[ NEWS_CLIENT ],
       },
     },
   );

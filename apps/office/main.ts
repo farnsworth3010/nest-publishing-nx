@@ -1,3 +1,4 @@
+import { CLIENT_PORTS, OFFICE_CLIENT } from '@app/gateway/constant';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { OfficeModule } from './office.module';
@@ -8,7 +9,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        port: 3006,
+        port: CLIENT_PORTS[ OFFICE_CLIENT ],
       },
     },
   );

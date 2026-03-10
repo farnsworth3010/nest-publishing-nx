@@ -1,37 +1,28 @@
+import { CLIENT_PORTS } from '@app/gateway/constant';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as joi from 'joi';
 import { ClientConfigService } from './client-config.service';
-import {
-  AUTHOR_CLIENT,
-  BOOK_CLIENT,
-  BOOK_MATERIAL_CLIENT,
-  CATEGORY_CLIENT,
-  MATERIAL_CLIENT,
-  OFFICE_CLIENT,
-  ROLE_CLIENT,
-  SALE_CLIENT,
-  USER_CLIENT,
-} from '@app/gateway/constant';
 
-@Module({
+function buildClientPortsSchema(): joi.SchemaMap {
+  const schema: joi.SchemaMap = {};
+
+  for ( const [ key, def ] of Object.entries( CLIENT_PORTS ) ) {
+    // allow overriding via env var, must be a positive integer
+    schema[ key ] = joi.number().integer().positive().default( def ) as any;
+  }
+
+  return schema;
+}
+
+@Module( {
   imports: [
-    ConfigModule.forRoot({
+    ConfigModule.forRoot( {
       isGlobal: false,
-      validationSchema: joi.object({
-        [AUTHOR_CLIENT]: joi.number().default(3001),
-        [BOOK_CLIENT]: joi.number().default(3002),
-        [BOOK_MATERIAL_CLIENT]: joi.number().default(3003),
-        [CATEGORY_CLIENT]: joi.number().default(3004),
-        [MATERIAL_CLIENT]: joi.number().default(3005),
-        [OFFICE_CLIENT]: joi.number().default(3006),
-        [ROLE_CLIENT]: joi.number().default(3007),
-        [SALE_CLIENT]: joi.number().default(3008),
-        [USER_CLIENT]: joi.number().default(3009),
-      }),
-    }),
+      validationSchema: joi.object( buildClientPortsSchema() ),
+    } ),
   ],
-  providers: [ClientConfigService],
-  exports: [ClientConfigService],
-})
-export class ClientConfigModule {}
+  providers: [ ClientConfigService ],
+  exports: [ ClientConfigService ],
+} )
+export class ClientConfigModule { }
