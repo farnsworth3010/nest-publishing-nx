@@ -1,0 +1,26 @@
+{
+  "name": "role",
+  "root": "apps/role",
+  "sourceRoot": "apps/role",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start role --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start role"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build role"
+      }
+    }
+  }
+}

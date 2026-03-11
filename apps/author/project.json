@@ -1,0 +1,26 @@
+{
+  "name": "author",
+  "root": "apps/author",
+  "sourceRoot": "apps/author",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start author --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start author"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build author"
+      }
+    }
+  }
+}

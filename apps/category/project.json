@@ -1,0 +1,26 @@
+{
+  "name": "category",
+  "root": "apps/category",
+  "sourceRoot": "apps/category",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start category --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start category"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build category"
+      }
+    }
+  }
+}

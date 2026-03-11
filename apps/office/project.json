@@ -1,0 +1,26 @@
+{
+  "name": "office",
+  "root": "apps/office",
+  "sourceRoot": "apps/office",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start office --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start office"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build office"
+      }
+    }
+  }
+}

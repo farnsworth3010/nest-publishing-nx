@@ -1,0 +1,26 @@
+{
+  "name": "book-material",
+  "root": "apps/book-material",
+  "sourceRoot": "apps/book-material",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start book-material --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start book-material"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build book-material"
+      }
+    }
+  }
+}

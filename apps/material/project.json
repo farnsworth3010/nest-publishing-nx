@@ -1,0 +1,26 @@
+{
+  "name": "material",
+  "root": "apps/material",
+  "sourceRoot": "apps/material",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start material --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start material"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build material"
+      }
+    }
+  }
+}

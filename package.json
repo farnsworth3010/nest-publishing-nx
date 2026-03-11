@@ -8,19 +8,9 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/apps/nest-publishing-microservices/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/nest-publishing-microservices/test/jest-e2e.json",
-    "start:user": "nest start user --watch",
-    "start:publishing-api-gateway": "nest start publishing-api-gateway --watch",
-    "start:book": "nest start book --watch"
+    "start:all": "npx nx run run-all:serve",
+    "start:all:no-watch": "npx nx run run-all:start"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -67,7 +57,9 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "nx": "22.3.3",
+    "@nx/eslint": "22.3.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -92,5 +84,6 @@
     "moduleNameMapper": {
       "^@app/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1"
     }
-  }
+  },
+  "nx": {}
 }

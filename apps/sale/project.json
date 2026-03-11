@@ -1,0 +1,26 @@
+{
+  "name": "sale",
+  "root": "apps/sale",
+  "sourceRoot": "apps/sale",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start sale --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start sale"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build sale"
+      }
+    }
+  }
+}

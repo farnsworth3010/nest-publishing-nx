@@ -1,0 +1,26 @@
+{
+  "name": "user",
+  "root": "apps/user",
+  "sourceRoot": "apps/user",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start user --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start user"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build user"
+      }
+    }
+  }
+}

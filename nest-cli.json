@@ -1,15 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/publishing-api-gateway/src",
-  "compilerOptions": {
-    "deleteOutDir": true,
-    "webpack": true,
-    "tsConfigPath": "apps/publishing-api-gateway/tsconfig.app.json"
-  },
   "monorepo": true,
-  "root": "apps/publishing-api-gateway",
   "projects": {
+    "author": {
+      "type": "application",
+      "root": "apps/author",
+      "entryFile": "main",
+      "sourceRoot": "apps/author",
+      "compilerOptions": {
+        "tsConfigPath": "apps/author/tsconfig.app.json"
+      }
+    },
     "book": {
       "type": "application",
       "root": "apps/book",
@@ -19,13 +21,49 @@
         "tsConfigPath": "apps/book/tsconfig.app.json"
       }
     },
-    "contracts": {
-      "type": "library",
-      "root": "libs/contracts",
-      "entryFile": "index",
-      "sourceRoot": "libs/contracts/src",
+    "book-material": {
+      "type": "application",
+      "root": "apps/book-material",
+      "entryFile": "main",
+      "sourceRoot": "apps/book-material",
       "compilerOptions": {
-        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
+        "tsConfigPath": "apps/book-material/tsconfig.app.json"
+      }
+    },
+    "category": {
+      "type": "application",
+      "root": "apps/category",
+      "entryFile": "main",
+      "sourceRoot": "apps/category",
+      "compilerOptions": {
+        "tsConfigPath": "apps/category/tsconfig.app.json"
+      }
+    },
+    "material": {
+      "type": "application",
+      "root": "apps/material",
+      "entryFile": "main",
+      "sourceRoot": "apps/material",
+      "compilerOptions": {
+        "tsConfigPath": "apps/material/tsconfig.app.json"
+      }
+    },
+    "news": {
+      "type": "application",
+      "root": "apps/news",
+      "entryFile": "main",
+      "sourceRoot": "apps/news",
+      "compilerOptions": {
+        "tsConfigPath": "apps/news/tsconfig.app.json"
+      }
+    },
+    "office": {
+      "type": "application",
+      "root": "apps/office",
+      "entryFile": "main",
+      "sourceRoot": "apps/office",
+      "compilerOptions": {
+        "tsConfigPath": "apps/office/tsconfig.app.json"
       }
     },
     "publishing-api-gateway": {
@@ -37,6 +75,24 @@
         "tsConfigPath": "apps/publishing-api-gateway/tsconfig.app.json"
       }
     },
+    "role": {
+      "type": "application",
+      "root": "apps/role",
+      "entryFile": "main",
+      "sourceRoot": "apps/role",
+      "compilerOptions": {
+        "tsConfigPath": "apps/role/tsconfig.app.json"
+      }
+    },
+    "sale": {
+      "type": "application",
+      "root": "apps/sale",
+      "entryFile": "main",
+      "sourceRoot": "apps/sale",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sale/tsconfig.app.json"
+      }
+    },
     "user": {
       "type": "application",
       "root": "apps/user",
@@ -44,6 +100,15 @@
       "sourceRoot": "apps/user",
       "compilerOptions": {
         "tsConfigPath": "apps/user/tsconfig.app.json"
+      }
+    },
+    "contracts": {
+      "type": "library",
+      "root": "libs/contracts",
+      "entryFile": "index",
+      "sourceRoot": "libs/contracts/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
     }
   }

@@ -1,0 +1,26 @@
+{
+  "name": "news",
+  "root": "apps/news",
+  "sourceRoot": "apps/news",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start news --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start news"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build news"
+      }
+    }
+  }
+}

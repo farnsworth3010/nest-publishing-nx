@@ -1,0 +1,26 @@
+{
+  "name": "book",
+  "root": "apps/book",
+  "sourceRoot": "apps/book",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start book --watch"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest start book"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nest build book"
+      }
+    }
+  }
+}

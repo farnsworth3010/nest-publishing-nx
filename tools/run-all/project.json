@@ -1,0 +1,19 @@
+{
+  "name": "run-all",
+  "root": "tools/run-all",
+  "projectType": "utility",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run-many --target=serve --projects=author,book,book-material,category,material,news,office,publishing-api-gateway,role,sale,user --parallel=11"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run-many --target=start --projects=author,book,book-material,category,material,news,office,publishing-api-gateway,role,sale,user --parallel=11"
+      }
+    }
+  }
+}
