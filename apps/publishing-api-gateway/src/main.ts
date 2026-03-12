@@ -41,13 +41,20 @@ async function bootstrap() {
     .setDescription('Publishing API description')
     .setVersion('1.0')
     .addTag('publishing')
-    .addBearerAuth()
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    }, 'bearer')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory, {
     jsonDocumentUrl: 'swagger/json',
     yamlDocumentUrl: 'swagger/yaml',
+    swaggerOptions: {
+      persistAuthorization: true,
+    }
   });
 
   app.enableCors({ origin: 'http://localhost:4200' });

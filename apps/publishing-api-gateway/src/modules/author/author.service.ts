@@ -20,9 +20,9 @@ export class AuthorService {
     return this.authorClient.send(AUTHOR_PATTERNS.FIND_ALL, {});
   }
 
-  findOne(id: number): Observable<Author> {
-    return this.authorClient.send(AUTHOR_PATTERNS.FIND_ONE, id);
-  }
+    findOne(id: number): Observable<Author> {
+      return this.authorClient.send(AUTHOR_PATTERNS.FIND_ONE, id);
+    }
 
   update(
     id: number,
@@ -36,5 +36,9 @@ export class AuthorService {
 
   remove(id: number): Observable<DeleteResult> {
     return this.authorClient.send(AUTHOR_PATTERNS.REMOVE, id);
+  }
+
+  findNewsByWriter(id: number): Observable<import('@app/contracts/news/news.entity').News[]> {
+    return this.authorClient.send(AUTHOR_PATTERNS.FIND_NEWS_BY_WRITER, id);
   }
 }

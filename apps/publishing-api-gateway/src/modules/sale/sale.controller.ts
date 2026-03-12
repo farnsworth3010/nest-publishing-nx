@@ -5,6 +5,7 @@ import { UserRole } from '@app/contracts/user/user.interface';
 import { Roles } from '@app/gateway/decorators/roles.decorator';
 import { AuthGuard } from '@app/gateway/guards/auth.guard';
 import { RolesGuard } from '@app/gateway/guards/roles.guard';
+import { ApiBearerAuth,  ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -20,6 +21,7 @@ import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { SaleService } from './sale.service';
 
+@ApiTags('sale')
 @Controller( 'sale' )
 export class SaleController {
   constructor( private readonly saleService: SaleService ) { }
@@ -27,6 +29,8 @@ export class SaleController {
   @Post()
   @Roles( UserRole.ADMIN, UserRole.SALES, UserRole.CLIENT )
   @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  
   create( @Body() createSaleDto: CreateSaleDto ): Observable<Sale> {
     return this.saleService.create( createSaleDto );
   }
@@ -34,6 +38,7 @@ export class SaleController {
   @Get()
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
   findAll(): Observable<Sale[]> {
     return this.saleService.findAll();
   }
@@ -41,6 +46,8 @@ export class SaleController {
   @Get( ':id' )
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Sale ID' })
   findOne( @Param( 'id' ) id: string ): Observable<Sale> {
     return this.saleService.findOne( +id );
   }
@@ -48,6 +55,9 @@ export class SaleController {
   @Patch( ':id' )
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Sale ID' })
+  
   update(
     @Param( 'id', new ParseIntPipe() ) id: number,
     @Body() updateSaleDto: UpdateSaleDto,
@@ -58,6 +68,8 @@ export class SaleController {
   @Delete( ':id' )
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Sale ID' })
   remove( @Param( 'id', new ParseIntPipe() ) id: number ): Observable<DeleteResult> {
     return this.saleService.remove( id );
   }

@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorController } from './author.controller';
 import { AuthorService } from './author.service';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { NEWS_CLIENT, CLIENT_PORTS } from '@app/gateway/constant';
 
 @Module( {
   imports: [
@@ -17,6 +19,17 @@ import { AuthorService } from './author.service';
     } ),
   ],
   controllers: [ AuthorController ],
-  providers: [ AuthorService ],
+  providers: [
+    AuthorService,
+    {
+      provide: NEWS_CLIENT,
+      useFactory: () => {
+        return ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: { port: CLIENT_PORTS[ NEWS_CLIENT ] },
+        });
+      },
+    },
+  ],
 } )
 export class AuthorModule { }

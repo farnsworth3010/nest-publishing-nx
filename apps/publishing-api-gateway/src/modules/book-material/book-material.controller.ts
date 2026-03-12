@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BookMaterialService } from './book-material.service';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/gateway/decorators/roles.decorator';
 import { UserRole } from '@app/contracts/user/user.interface';
 import { AuthGuard } from '@app/gateway/guards/auth.guard';
@@ -19,6 +20,7 @@ import { UpdateBookMaterialDto } from '@app/contracts/book-material/update-book-
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Observable } from 'rxjs';
 
+@ApiTags('book-material')
 @Controller('book-material')
 export class BookMaterialController {
   constructor(private readonly bookMaterialService: BookMaterialService) {}
@@ -26,6 +28,7 @@ export class BookMaterialController {
   @Post()
   @Roles(UserRole.ADMIN, UserRole.SALES)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   create(
     @Body() createBookMaterialDto: CreateBookMaterialDto,
   ): Observable<BookMaterial> {
@@ -35,6 +38,7 @@ export class BookMaterialController {
   @Get()
   @Roles(UserRole.ADMIN, UserRole.SALES)
   @UseGuards(AuthGuard, AuthGuard)
+  @ApiBearerAuth()
   findAll(): Observable<BookMaterial[]> {
     return this.bookMaterialService.findAll();
   }
@@ -42,6 +46,8 @@ export class BookMaterialController {
   @Get(':id')
   @Roles(UserRole.ADMIN, UserRole.SALES)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'BookMaterial ID' })
   findOne(@Param('id') id: string): Observable<BookMaterial> {
     return this.bookMaterialService.findOne(+id);
   }
@@ -49,6 +55,8 @@ export class BookMaterialController {
   @Patch(':id')
   @Roles(UserRole.ADMIN, UserRole.SALES)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'BookMaterial ID' })
   update(
     @Param('id') id: string,
     @Body() updateBookMaterialDto: UpdateBookMaterialDto,
@@ -59,6 +67,8 @@ export class BookMaterialController {
   @Delete(':id')
   @Roles(UserRole.ADMIN, UserRole.SALES)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'BookMaterial ID' })
   remove(@Param('id') id: string): Observable<DeleteResult> {
     return this.bookMaterialService.remove(+id);
   }

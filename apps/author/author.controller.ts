@@ -1,5 +1,6 @@
 import { Author } from '@app/contracts/author/author.entity';
 import { AUTHOR_PATTERNS } from '@app/contracts/author/author.pattern';
+import { News } from '@app/contracts/news/news.entity';
 import { CreateAuthorDto } from '@app/contracts/author/create-author.dto';
 import { UpdateAuthorDto } from '@app/contracts/author/update-author.dto';
 import { Controller } from '@nestjs/common';
@@ -24,6 +25,11 @@ export class AuthorController {
   @MessagePattern( AUTHOR_PATTERNS.FIND_ONE )
   findOne( @Payload() id: number ): Promise<Author> {
     return this.authorService.findOne( id );
+  }
+
+  @MessagePattern( AUTHOR_PATTERNS.FIND_NEWS_BY_WRITER )
+  findNewsByWriter( @Payload() writerId: number ): Promise<News[]> {
+    return this.authorService.findNewsByWriter( writerId );
   }
 
   @MessagePattern( AUTHOR_PATTERNS.UPDATE )

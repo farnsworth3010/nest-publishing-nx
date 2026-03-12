@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OfficeService } from './office.service';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Roles } from '@app/gateway/decorators/roles.decorator';
 import { UserRole } from '@app/contracts/user/user.interface';
 import { AuthGuard } from '@app/gateway/guards/auth.guard';
@@ -19,6 +20,7 @@ import { Office } from '@app/contracts/office/office.entity';
 import { UpdateOfficeDto } from '@app/contracts/office/update-office.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 
+@ApiTags('office')
 @Controller('office')
 export class OfficeController {
   constructor(private readonly officeService: OfficeService) {}
@@ -26,6 +28,8 @@ export class OfficeController {
   @Post()
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  
   create(@Body() createOfficeDto: CreateOfficeDto): Observable<Office> {
     return this.officeService.create(createOfficeDto);
   }
@@ -33,6 +37,7 @@ export class OfficeController {
   @Get()
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   findAll(): Observable<Office[]> {
     return this.officeService.findAll();
   }
@@ -40,6 +45,8 @@ export class OfficeController {
   @Get(':id')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Office ID' })
   findOne(@Param('id') id: string): Observable<Office> {
     return this.officeService.findOne(+id);
   }
@@ -47,6 +54,9 @@ export class OfficeController {
   @Patch(':id')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Office ID' })
+  
   update(
     @Param('id') id: string,
     @Body() updateOfficeDto: UpdateOfficeDto,
@@ -57,6 +67,8 @@ export class OfficeController {
   @Delete(':id')
   @Roles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Office ID' })
   remove(@Param('id') id: string): Observable<DeleteResult> {
     return this.officeService.remove(+id);
   }

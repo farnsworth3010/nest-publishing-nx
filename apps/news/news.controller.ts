@@ -26,6 +26,11 @@ export class NewsController {
     return this.newsService.findOne( id );
   }
 
+  @MessagePattern( NEWS_PATTERNS.FIND_BY_WRITER )
+  findByWriter( @Payload() writerId: number ): Promise<News[]> {
+    return this.newsService.findByWriter( writerId );
+  }
+
   @MessagePattern( NEWS_PATTERNS.UPDATE )
   update( @Payload() { id, updateNewsDto }: { id: number; updateNewsDto: UpdateNewsDto; } ): Promise<UpdateResult> {
     return this.newsService.update( id, updateNewsDto );

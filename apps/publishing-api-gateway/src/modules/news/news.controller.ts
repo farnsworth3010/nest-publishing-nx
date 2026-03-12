@@ -15,11 +15,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { NewsService } from './news.service';
 
+@ApiTags('news')
 @Controller( 'news' )
 export class NewsController {
   constructor( private readonly newsService: NewsService ) { }
@@ -42,6 +43,7 @@ export class NewsController {
   @Get( ':id' )
   @UseGuards( AuthGuard )
   @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
   findOne( @Param( 'id' ) id: string ): Observable<News> {
     return this.newsService.findOne( +id );
   }
@@ -50,6 +52,7 @@ export class NewsController {
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
   update( @Param( 'id' ) id: string, @Body() updateNewsDto: UpdateNewsDto ): Observable<UpdateResult> {
     return this.newsService.update( +id, updateNewsDto );
   }
@@ -58,6 +61,7 @@ export class NewsController {
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
   remove( @Param( 'id' ) id: string ): Observable<DeleteResult> {
     return this.newsService.remove( +id );
   }

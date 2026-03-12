@@ -1,7 +1,12 @@
 import { Author } from '@app/contracts/author/author.entity';
 import { CreateAuthorDto } from '@app/contracts/author/create-author.dto';
 import { UpdateAuthorDto } from '@app/contracts/author/update-author.dto';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
+import { NEWS_CLIENT } from '@app/gateway/constant';
+import { NEWS_PATTERNS } from '@app/contracts/news/news.pattern';
+import { News } from '@app/contracts/news/news.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
@@ -9,6 +14,7 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 export class AuthorService {
   constructor(
     @InjectRepository( Author ) private authorRepository: Repository<Author>,
+    @Inject( NEWS_CLIENT ) private newsClient: ClientProxy,
   ) { }
 
   async create( createAuthorDto: CreateAuthorDto ): Promise<Author> {
@@ -45,5 +51,11 @@ export class AuthorService {
 
   async remove( id: number ): Promise<DeleteResult> {
     return await this.authorRepository.delete( { id } );
+  }
+
+  async findNewsByWriter( writerId: number ): Promise<News[]> {
+    const news = await firstValueFrom( this.newsClient.send<News[], number>( NEWS_PATTERNS.FIND_BY_WRITER, writerId ) );
+
+    return news ?? [];
   }
 }
