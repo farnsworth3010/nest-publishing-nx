@@ -12,6 +12,7 @@ import { NewsController } from './news.controller';
 import { NewsService } from './news.service';
 
 @Module( {
+  controllers: [ NewsController ],
   imports: [
     ClientConfigModule,
     JwtModule.registerAsync( {
@@ -20,7 +21,6 @@ import { NewsService } from './news.service';
     } ),
     UserModule,
   ],
-  controllers: [ NewsController ],
   providers: [
     NewsService,
     UserService,
@@ -34,4 +34,5 @@ import { NewsService } from './news.service';
     },
   ],
 } )
-export class NewsModule { }
+export class NewsModule {
+}

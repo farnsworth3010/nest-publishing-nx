@@ -1,3 +1,4 @@
+import { News } from '@app/contracts/news/news.entity';
 import 'dotenv/config';
 import { DataSource, EntityManager } from 'typeorm';
 import { Author } from '../libs/contracts/src/author/author.entity';
@@ -18,7 +19,7 @@ const AppDataSource = new DataSource( {
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'nest_publishing',
   entities: [
-    User, Role, Book, BookMaterial, Category, Office, Sale, Material, Author
+    User, Role, Book, BookMaterial, Category, Office, Sale, Material, Author, News
   ],
   synchronize: false,
 } );

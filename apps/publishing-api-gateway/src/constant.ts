@@ -10,7 +10,6 @@ export const SALE_CLIENT = 'SALE_CLIENT';
 export const USER_CLIENT = 'USER_CLIENT';
 
 export const CLIENT_PORTS = Object.freeze( {
-  [ NEWS_CLIENT ]: 3010,
   [ AUTHOR_CLIENT ]: 3009,
   [ BOOK_CLIENT ]: 3002,
   [ BOOK_MATERIAL_CLIENT ]: 3003,
@@ -20,6 +19,7 @@ export const CLIENT_PORTS = Object.freeze( {
   [ ROLE_CLIENT ]: 3007,
   [ SALE_CLIENT ]: 3008,
   [ USER_CLIENT ]: 3001,
+  [ NEWS_CLIENT ]: 3010,
 } );
 
 export function resolveClientPorts(): Readonly<Record<string, number>> {

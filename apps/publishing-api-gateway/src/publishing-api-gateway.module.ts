@@ -3,6 +3,7 @@ import { BookMaterialModule } from '@app/gateway/modules/book-material/book-mate
 import { BookModule } from '@app/gateway/modules/book/book.module';
 import { CategoryModule } from '@app/gateway/modules/category/category.module';
 import { MaterialModule } from '@app/gateway/modules/material/material.module';
+import { NewsModule } from '@app/gateway/modules/news/news.module';
 import { OfficeModule } from '@app/gateway/modules/office/office.module';
 import { RoleModule } from '@app/gateway/modules/role/role.module';
 import { SaleModule } from '@app/gateway/modules/sale/sale.module';
@@ -11,7 +12,6 @@ import { JwtConfigService } from '@config/jwt.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { NewsModule } from 'apps/news/news.module';
 
 @Module( {
   imports: [
