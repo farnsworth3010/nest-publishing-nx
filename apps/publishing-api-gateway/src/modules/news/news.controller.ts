@@ -15,12 +15,21 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { NewsService } from './news.service';
 
-@ApiTags('news')
+@ApiTags( 'news' )
 @Controller( 'news' )
 export class NewsController {
   constructor( private readonly newsService: NewsService ) { }
@@ -29,6 +38,9 @@ export class NewsController {
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiCreatedResponse( { type: News } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   create( @Body() createNewsDto: CreateNewsDto ): Observable<News> {
     return this.newsService.create( createNewsDto );
   }
@@ -36,6 +48,7 @@ export class NewsController {
   @Get()
   @UseGuards( AuthGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { type: News, isArray: true } )
   findAll(): Observable<News[]> {
     return this.newsService.findAll();
   }
@@ -43,7 +56,9 @@ export class NewsController {
   @Get( ':id' )
   @UseGuards( AuthGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
+  @ApiParam( { name: 'id', type: 'integer', description: 'News ID' } )
+  @ApiOkResponse( { type: News } )
+  @ApiNotFoundResponse( { description: 'News not found' } )
   findOne( @Param( 'id' ) id: string ): Observable<News> {
     return this.newsService.findOne( +id );
   }
@@ -52,7 +67,10 @@ export class NewsController {
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
+  @ApiParam( { name: 'id', type: 'integer', description: 'News ID' } )
+  @ApiOkResponse( { description: 'News updated' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   update( @Param( 'id' ) id: string, @Body() updateNewsDto: UpdateNewsDto ): Observable<UpdateResult> {
     return this.newsService.update( +id, updateNewsDto );
   }
@@ -61,7 +79,10 @@ export class NewsController {
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'News ID' })
+  @ApiParam( { name: 'id', type: 'integer', description: 'News ID' } )
+  @ApiOkResponse( { description: 'News deleted' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   remove( @Param( 'id' ) id: string ): Observable<DeleteResult> {
     return this.newsService.remove( +id );
   }

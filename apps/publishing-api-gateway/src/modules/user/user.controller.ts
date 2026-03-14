@@ -19,7 +19,16 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { map, Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { DeleteResult } from 'typeorm';
@@ -33,6 +42,7 @@ export class UserController {
   @Get( '/profile' )
   @UseGuards( AuthGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { type: UserRO } )
   findMe( @UserDecorator( 'email' ) email: string ): Observable<UserRO> {
     return this.userService.findByEmail( email );
   }
@@ -41,6 +51,7 @@ export class UserController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { description: 'List of users' } )
   findAll(): Observable<UserItem[]> {
     return this.userService.findAll();
   }
@@ -55,6 +66,8 @@ export class UserController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { type: UserRO } )
+  @ApiNotFoundResponse( { description: 'User not found' } )
   findById( @Param( 'id' ) userId ): Observable<UserRO> {
     return this.userService.findById( +userId );
   }
@@ -64,6 +77,10 @@ export class UserController {
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
   @ApiParam( { name: 'id', type: 'integer', description: 'User ID' } )
+
+  @ApiOkResponse( { type: User } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
 
   update(
     @Param( 'id', new ParseIntPipe() ) userId: number,
@@ -76,6 +93,9 @@ export class UserController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiCreatedResponse( { description: 'User created' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   create( @Body() userData: CreateUserDto ) {
     return this.userService.create( userData );
   }
@@ -90,6 +110,9 @@ export class UserController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { description: 'User deleted' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   delete(
     @Param( 'id', new ParseIntPipe() ) userId: number,
   ): Observable<DeleteResult> {
@@ -97,6 +120,8 @@ export class UserController {
   }
 
   @Post( 'sign-in' )
+  @ApiOkResponse( { description: 'User signed in' } )
+  @ApiUnauthorizedResponse( { description: 'Invalid credentials' } )
   login( @Body() loginUserDto: LoginUserDto ): Observable<UserRO> {
     return this.userService.findOne( loginUserDto ).pipe(
       map( ( _user: UserData ) => {

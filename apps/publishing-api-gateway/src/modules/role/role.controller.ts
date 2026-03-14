@@ -5,7 +5,6 @@ import { UserRole } from '@app/contracts/user/user.interface';
 import { Roles } from '@app/gateway/decorators/roles.decorator';
 import { AuthGuard } from '@app/gateway/guards/auth.guard';
 import { RolesGuard } from '@app/gateway/guards/roles.guard';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -17,11 +16,21 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { RoleService } from './role.service';
 
-@ApiTags('role')
+@ApiTags( 'role' )
 @Controller( 'role' )
 export class RoleController {
   constructor( private readonly roleService: RoleService ) { }
@@ -30,7 +39,10 @@ export class RoleController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  
+  @ApiCreatedResponse( { type: Role } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
+
   create( @Body() data: CreateRoleDto ): Observable<Role> {
     return this.roleService.create( data );
   }
@@ -39,7 +51,9 @@ export class RoleController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'Role ID' })
+  @ApiParam( { name: 'id', type: 'integer', description: 'Role ID' } )
+  @ApiOkResponse( { type: Role } )
+  @ApiNotFoundResponse( { description: 'Role not found' } )
   findOne( @Param( 'id', new ParseIntPipe() ) id: number ): Observable<Role> {
     return this.roleService.findOne( id );
   }
@@ -48,6 +62,7 @@ export class RoleController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
+  @ApiOkResponse( { type: Role, isArray: true } )
   findAll(): Observable<Role[]> {
     return this.roleService.findAll();
   }
@@ -56,8 +71,11 @@ export class RoleController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'Role ID' })
-  
+  @ApiParam( { name: 'id', type: 'integer', description: 'Role ID' } )
+  @ApiOkResponse( { description: 'Role updated' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
+
   update(
     @Param( 'id', new ParseIntPipe() ) id: number,
     @Body() data: UpdateRoleDto,
@@ -69,7 +87,10 @@ export class RoleController {
   @Roles( UserRole.ADMIN )
   @UseGuards( AuthGuard, RolesGuard )
   @ApiBearerAuth()
-  @ApiParam({ name: 'id', type: 'integer', description: 'Role ID' })
+  @ApiParam( { name: 'id', type: 'integer', description: 'Role ID' } )
+  @ApiOkResponse( { description: 'Role deleted' } )
+  @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
+  @ApiForbiddenResponse( { description: 'Forbidden' } )
   remove( @Param( 'id', new ParseIntPipe() ) id: number ): Observable<DeleteResult> {
     return this.roleService.remove( id );
   }
