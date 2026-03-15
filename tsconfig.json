@@ -24,6 +24,8 @@
     "paths": {
       "@app/contracts": ["libs/contracts/src"],
       "@app/contracts/*": ["libs/contracts/src/*"],
+      "@app/common": ["libs/common/src"],
+      "@app/common/*": ["libs/common/src/*"],
       "@app/gateway/*": ["apps/publishing-api-gateway/src/*"],
       "@config/*": ["config/*"]
     }

@@ -13,6 +13,7 @@ import { validate } from 'class-validator';
 import { addMinutes } from 'date-fns';
 import * as generator from 'generate-password';
 import { DeleteResult, Repository } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class UserService {
@@ -125,7 +126,11 @@ export class UserService {
   }
 
   async delete( id: number ): Promise<DeleteResult> {
-    return await this.userRepository.delete( { id } );
+    try {
+      return await this.userRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 
   async findById( id: number ): Promise<UserRO> {

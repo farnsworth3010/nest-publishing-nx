@@ -9,6 +9,7 @@ import { NEWS_PATTERNS } from '@app/contracts/news/news.pattern';
 import { News } from '@app/contracts/news/news.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class AuthorService {
@@ -50,7 +51,11 @@ export class AuthorService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.authorRepository.delete( { id } );
+    try {
+      return await this.authorRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 
   async findNewsByWriter( writerId: number ): Promise<News[]> {

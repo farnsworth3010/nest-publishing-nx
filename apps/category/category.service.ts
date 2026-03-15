@@ -4,6 +4,7 @@ import { UpdateCategoryDto } from '@app/contracts/category/update-category.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class CategoryService {
@@ -44,6 +45,10 @@ export class CategoryService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.categoryRepository.delete( { id } );
+    try {
+      return await this.categoryRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }

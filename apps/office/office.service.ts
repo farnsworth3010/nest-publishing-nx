@@ -4,6 +4,7 @@ import { UpdateOfficeDto } from '@app/contracts/office/update-office.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class OfficeService {
@@ -44,6 +45,10 @@ export class OfficeService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.officeRepository.delete( { id } );
+    try {
+      return await this.officeRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }

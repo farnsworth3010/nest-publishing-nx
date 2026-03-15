@@ -5,6 +5,7 @@ import { UpdateNewsDto } from '@app/contracts/news/update-news.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class NewsService {
@@ -64,6 +65,10 @@ export class NewsService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.newsRepository.delete( { id } );
+    try {
+      return await this.newsRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }

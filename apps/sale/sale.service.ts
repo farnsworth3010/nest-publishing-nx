@@ -7,6 +7,7 @@ import { User } from '@app/contracts/user/user.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class SaleService {
@@ -74,6 +75,10 @@ export class SaleService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.saleRepository.delete( { id } );
+    try {
+      return await this.saleRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }

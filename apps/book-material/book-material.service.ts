@@ -6,6 +6,7 @@ import { Material } from '@app/contracts/material/material.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class BookMaterialService {
@@ -62,6 +63,10 @@ export class BookMaterialService {
   }
 
   async remove( id: number ): Promise<DeleteResult> {
-    return await this.bookMaterialRepository.delete( { id } );
+    try {
+      return await this.bookMaterialRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }

@@ -4,6 +4,7 @@ import { UpdateRoleDto } from '@app/contracts/role/update-role.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
+import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class RoleService {
@@ -45,6 +46,10 @@ export class RoleService {
   }
 
   async delete( id: number ): Promise<DeleteResult> {
-    return await this.roleRepository.delete( { id } );
+    try {
+      return await this.roleRepository.delete( { id } );
+    } catch ( error ) {
+      handleTypeOrmError( error );
+    }
   }
 }
