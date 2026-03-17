@@ -1,13 +1,11 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsNumber,
   IsOptional,
   IsPositive,
-  IsString,
-  ValidateNested,
+  IsString
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MaterialDto } from '@app/contracts/material/material.dto';
 
 export class CreateBookDto {
   @ApiProperty()
@@ -39,20 +37,19 @@ export class CreateBookDto {
   @IsString()
   readonly publishingEnd: Date;
 
-  @ApiPropertyOptional({ type: [Number] })
+  @ApiPropertyOptional( { type: [ Number ] } )
   @IsOptional()
-  @IsNumber({}, { each: true })
+  @IsNumber( {}, { each: true } )
   readonly categoryIds: number[];
 
-  @ApiPropertyOptional({ type: [Number] })
+  @ApiPropertyOptional( { type: [ Number ] } )
   @IsOptional()
-  @IsNumber({}, { each: true })
+  @IsNumber( {}, { each: true } )
   readonly authorIds: number[];
 
-  @ApiPropertyOptional({ type: [MaterialDto] })
+  @ApiPropertyOptional( { type: [ Number ] } )
   @IsOptional()
-  @ValidateNested({ each: true })
-  readonly materials: MaterialDto[];
+  readonly materials: { id: number; amount: number; }[];
 
   @ApiPropertyOptional()
   @IsOptional()

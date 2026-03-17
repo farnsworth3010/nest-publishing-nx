@@ -1,3 +1,4 @@
+import { handleTypeOrmError } from '@app/common/db-error.util';
 import { Author } from '@app/contracts/author/author.entity';
 import { BookMaterial } from '@app/contracts/book-material/book-material.entity';
 import { Book } from '@app/contracts/book/book.entity';
@@ -9,7 +10,6 @@ import { Material } from '@app/contracts/material/material.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { handleTypeOrmError } from '@app/common/db-error.util';
 
 @Injectable()
 export class BookService {
@@ -62,7 +62,7 @@ export class BookService {
       } ),
     );
 
-    return res;
+    return await this.bookRepository.manager.findOne( Book, { where: { id: res.id }, relations: [ 'authors', 'categories', 'bookMaterials' ] } ) as Book;
   }
 
   async findAll(): Promise<Book[]> {
@@ -83,34 +83,81 @@ export class BookService {
   }
 
   async update( id: number, updateBookDto: UpdateBookDto ): Promise<Book> {
-    const toUpdate = await this.bookRepository.findOneBy( { id } );
+    return await this.bookRepository.manager.transaction( async ( manager ) => {
+      const book = await manager.findOne( Book, { where: { id }, relations: [ 'authors', 'categories', 'bookMaterials' ] } );
 
-    const { authorIds, categoryIds } = updateBookDto;
+      if ( !book ) {
+        throw new HttpException( { message: 'Book not found' }, HttpStatus.NOT_FOUND );
+      }
 
-    let categories = toUpdate?.categories ?? [];
-    let authors = toUpdate?.authors ?? [];
+      const { materials } = updateBookDto;
 
-    if ( !toUpdate ) {
-      throw new HttpException(
-        { message: 'Book not found' },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+      // Update scalar fields
+      const {
+        name,
+        pages,
+        value,
+        quantity,
+        publishingStart,
+        publishingEnd,
+        forceQuantity,
+      } = updateBookDto as any;
 
-    if ( updateBookDto.authorIds?.length ) {
-      authors = await this.getAuthors( authorIds );
-    }
+      const partialUpdate: Partial<Book> = {};
+      if ( name !== undefined ) partialUpdate.name = name;
+      if ( pages !== undefined ) partialUpdate.pages = pages;
+      if ( value !== undefined ) partialUpdate.value = value;
+      if ( quantity !== undefined ) partialUpdate.quantity = quantity;
+      if ( publishingStart !== undefined ) partialUpdate.publishingStart = publishingStart;
+      if ( publishingEnd !== undefined ) partialUpdate.publishingEnd = publishingEnd;
+      if ( forceQuantity !== undefined ) ( partialUpdate as any ).forceQuantity = forceQuantity;
 
-    if ( updateBookDto.categoryIds?.length ) {
-      categories = await this.getCategories( categoryIds );
-    }
+      if ( Object.keys( partialUpdate ).length ) {
+        await manager.update( Book, { id }, partialUpdate );
+      }
 
-    toUpdate.authors = authors;
-    toUpdate.categories = categories;
+      // Sync many-to-many relations via relation API
+      if ( ( updateBookDto as any ).authorIds ) {
+        const existingAuthorIds = ( book.authors ?? [] ).map( a => a.id );
+        const addAuthors = ( updateBookDto as any ).authorIds.filter( ( aid: number ) => !existingAuthorIds.includes( aid ) );
+        const removeAuthors = existingAuthorIds.filter( ( eid: number ) => !( ( updateBookDto as any ).authorIds.includes( eid ) ) );
+        if ( addAuthors.length || removeAuthors.length ) {
+          await manager.createQueryBuilder().relation( Book, 'authors' ).of( id ).addAndRemove( addAuthors, removeAuthors );
+        }
+      }
 
-    Object.assign( toUpdate, updateBookDto );
+      if ( ( updateBookDto as any ).categoryIds ) {
+        const existingCategoryIds = ( book.categories ?? [] ).map( c => c.id );
+        const addCategories = ( updateBookDto as any ).categoryIds.filter( ( cid: number ) => !existingCategoryIds.includes( cid ) );
+        const removeCategories = existingCategoryIds.filter( ( eid: number ) => !( ( updateBookDto as any ).categoryIds.includes( eid ) ) );
+        if ( addCategories.length || removeCategories.length ) {
+          await manager.createQueryBuilder().relation( Book, 'categories' ).of( id ).addAndRemove( addCategories, removeCategories );
+        }
+      }
 
-    return await this.bookRepository.save( toUpdate );
+      // Replace BookMaterial associations if any incoming materials
+      if ( materials?.length ) {
+        await manager.delete( BookMaterial, { book_id: id } );
+
+        for ( const m of materials ) {
+          const material = await manager.findOne( Material, { where: { id: m.id } } );
+          if ( !material ) {
+            throw new HttpException( { message: `material with id ${ m.id } not found` }, HttpStatus.BAD_REQUEST );
+          }
+
+          const newBookMaterial = new BookMaterial();
+          newBookMaterial.amount = m.amount ?? 1;
+          newBookMaterial.book_id = id;
+          newBookMaterial.material_id = material.id;
+          newBookMaterial.material = material;
+
+          const bm = manager.create( BookMaterial, newBookMaterial );
+          await manager.save( BookMaterial, bm );
+        }
+      }
+
+      return await manager.findOne( Book, { where: { id }, relations: [ 'authors', 'categories', 'bookMaterials' ] } ) as Book;
+    } );
   }
 
   async remove( id: number ): Promise<DeleteResult> {
