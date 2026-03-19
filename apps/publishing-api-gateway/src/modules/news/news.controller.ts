@@ -26,7 +26,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { NewsService } from './news.service';
 
 @ApiTags( 'news' )
@@ -71,7 +71,7 @@ export class NewsController {
   @ApiOkResponse( { description: 'News updated' } )
   @ApiUnauthorizedResponse( { description: 'Unauthorized' } )
   @ApiForbiddenResponse( { description: 'Forbidden' } )
-  update( @Param( 'id' ) id: string, @Body() updateNewsDto: UpdateNewsDto ): Observable<UpdateResult> {
+  update( @Param( 'id' ) id: string, @Body() updateNewsDto: UpdateNewsDto ): Observable<News> {
     return this.newsService.update( +id, updateNewsDto );
   }
 

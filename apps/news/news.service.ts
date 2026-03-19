@@ -1,11 +1,11 @@
+import { handleTypeOrmError } from '@app/common/db-error.util';
 import { Author } from '@app/contracts/author/author.entity';
 import { CreateNewsDto } from '@app/contracts/news/create-news.dto';
 import { News } from '@app/contracts/news/news.entity';
 import { UpdateNewsDto } from '@app/contracts/news/update-news.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { handleTypeOrmError } from '@app/common/db-error.util';
+import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
 export class NewsService {
@@ -36,9 +36,9 @@ export class NewsService {
 
   async findByWriter( writerId: number ): Promise<News[]> {
     return await this.newsRepository
-      .createQueryBuilder('news')
-      .leftJoinAndSelect('news.writer', 'writer')
-      .where('writer.id = :writerId', { writerId })
+      .createQueryBuilder( 'news' )
+      .leftJoinAndSelect( 'news.writer', 'writer' )
+      .where( 'writer.id = :writerId', { writerId } )
       .getMany();
   }
 
@@ -52,16 +52,30 @@ export class NewsService {
     return news;
   }
 
-  async update( id: number, updateNewsDto: UpdateNewsDto ): Promise<UpdateResult> {
+  async update( id: number, updateNewsDto: UpdateNewsDto ): Promise<News> {
     const toUpdate = await this.newsRepository.findOneBy( { id } );
 
     if ( !toUpdate ) {
       throw new HttpException( { message: 'news not found' }, HttpStatus.NOT_FOUND );
     }
 
-  Object.assign( toUpdate, updateNewsDto as Partial<News> );
+    if ( updateNewsDto.writerId !== undefined ) {
+      if ( updateNewsDto.writerId ) {
+        const author = await this.authorRepository.findOneBy( { id: updateNewsDto.writerId } );
+        if ( !author ) {
+          throw new HttpException( { message: 'Author not found' }, HttpStatus.NOT_FOUND );
+        }
+        toUpdate.writer = author;
+      } else {
+        toUpdate.writer = undefined;
+      }
+    }
 
-    return this.newsRepository.update( { id }, toUpdate );
+    // Assign other fields, excluding writerId
+    const { writerId, ...otherFields } = updateNewsDto;
+    Object.assign( toUpdate, otherFields as Partial<News> );
+
+    return await this.newsRepository.save( toUpdate );
   }
 
   async remove( id: number ): Promise<DeleteResult> {

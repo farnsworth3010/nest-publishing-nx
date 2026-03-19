@@ -4,7 +4,7 @@ import { NEWS_PATTERNS } from '@app/contracts/news/news.pattern';
 import { UpdateNewsDto } from '@app/contracts/news/update-news.dto';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { NewsService } from './news.service';
 
 @Controller()
@@ -32,7 +32,7 @@ export class NewsController {
   }
 
   @MessagePattern( NEWS_PATTERNS.UPDATE )
-  update( @Payload() { id, updateNewsDto }: { id: number; updateNewsDto: UpdateNewsDto; } ): Promise<UpdateResult> {
+  update( @Payload() { id, updateNewsDto }: { id: number; updateNewsDto: UpdateNewsDto; } ): Promise<News> {
     return this.newsService.update( id, updateNewsDto );
   }
 

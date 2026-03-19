@@ -6,7 +6,7 @@ import { NEWS_CLIENT } from '@app/gateway/constant';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class NewsService {
@@ -24,8 +24,8 @@ export class NewsService {
     return this.newsClient.send<News, number>( NEWS_PATTERNS.FIND_ONE, id );
   }
 
-  update( id: number, updateNewsDto: UpdateNewsDto ): Observable<UpdateResult> {
-    return this.newsClient.send<UpdateResult, { id: number; updateNewsDto: UpdateNewsDto; }>(
+  update( id: number, updateNewsDto: UpdateNewsDto ): Observable<News> {
+    return this.newsClient.send<News, { id: number; updateNewsDto: UpdateNewsDto; }>(
       NEWS_PATTERNS.UPDATE,
       {
         id,
