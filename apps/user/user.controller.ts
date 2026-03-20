@@ -1,12 +1,13 @@
-import { Controller } from '@nestjs/common';
-import { UserService } from './user.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
-import { USER_PATTERNS } from '@app/contracts/user/user.pattern';
 import { CreateUserDto } from '@app/contracts/user/create-user.dto';
+import { GoogleAuthUserDto } from '@app/contracts/user/google-auth-user.dto';
+import { UpdateUserDto } from '@app/contracts/user/update-user.dto';
 import { User, UserRO } from '@app/contracts/user/user.entity';
 import { UserItem } from '@app/contracts/user/user.interface';
-import { UpdateUserDto } from '@app/contracts/user/update-user.dto';
+import { USER_PATTERNS } from '@app/contracts/user/user.pattern';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DeleteResult } from 'typeorm';
+import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
@@ -49,5 +50,10 @@ export class UserController {
   @MessagePattern(USER_PATTERNS.REMOVE)
   async delete(@Payload() userId: string): Promise<DeleteResult> {
     return await this.userService.delete(+userId);
+  }
+
+  @MessagePattern(USER_PATTERNS.FIND_OR_CREATE_BY_GOOGLE)
+  async findOrCreateByGoogle(@Payload() dto: GoogleAuthUserDto): Promise<UserRO> {
+    return await this.userService.findOrCreateByGoogle(dto);
   }
 }

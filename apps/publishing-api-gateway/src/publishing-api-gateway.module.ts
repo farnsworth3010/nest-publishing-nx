@@ -2,6 +2,7 @@ import { AuthorModule } from '@app/gateway/modules/author/author.module';
 import { BookMaterialModule } from '@app/gateway/modules/book-material/book-material.module';
 import { BookModule } from '@app/gateway/modules/book/book.module';
 import { CategoryModule } from '@app/gateway/modules/category/category.module';
+import { GoogleModule } from '@app/gateway/modules/google/google.module';
 import { MaterialModule } from '@app/gateway/modules/material/material.module';
 import { NewsModule } from '@app/gateway/modules/news/news.module';
 import { OfficeModule } from '@app/gateway/modules/office/office.module';
@@ -30,6 +31,7 @@ import { JwtModule } from '@nestjs/jwt';
     RoleModule,
     SaleModule,
     NewsModule,
+    GoogleModule,
   ],
   controllers: [],
   providers: [],

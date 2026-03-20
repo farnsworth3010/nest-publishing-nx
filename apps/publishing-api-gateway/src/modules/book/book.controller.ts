@@ -15,16 +15,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult } from 'typeorm';
 import { BookService } from './book.service';
@@ -90,5 +81,26 @@ export class BookController {
   @ApiForbiddenResponse( { description: 'Forbidden' } )
   remove( @Param( 'id' ) id: string ): Observable<DeleteResult> {
     return this.BookService.remove( +id );
+  }
+
+  @Post('export/sheets')
+  @Roles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  exportToSheets(): Observable<any> {
+    return this.BookService.exportToSheets();
+  }
+
+  @Get(':id/price/:currency')
+  @Roles(UserRole.SALES, UserRole.ADMIN, UserRole.CLIENT)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', type: 'integer', description: 'Book ID' })
+  @ApiParam({ name: 'currency', type: 'string', description: 'Target currency abbreviation (e.g. USD, EUR, RUB)' })
+  getPriceInCurrency(
+    @Param('id') id: string,
+    @Param('currency') currency: string,
+  ): Observable<any> {
+    return this.BookService.getPriceInCurrency(+id, currency.toUpperCase());
   }
 }

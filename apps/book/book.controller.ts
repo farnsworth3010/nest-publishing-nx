@@ -38,4 +38,16 @@ export class BookController {
   remove( @Payload() id: number ): Promise<DeleteResult> {
     return this.bookService.remove( id );
   }
+
+  @MessagePattern(BOOK_PATTERNS.GET_PRICE_IN_CURRENCY)
+  getPriceInCurrency(
+    @Payload() { id, currency }: { id: number; currency: string },
+  ) {
+    return this.bookService.getPriceInCurrency(id, currency);
+  }
+
+  @MessagePattern(BOOK_PATTERNS.EXPORT_TO_SHEETS)
+  exportToSheets() {
+    return this.bookService.exportToSheets();
+  }
 }

@@ -1,16 +1,16 @@
+import { Office } from '@app/contracts/office/office.entity';
+import { Role } from '@app/contracts/role/role.entity';
+import { Sale } from '@app/contracts/sale/sale.entity';
 import * as argon2 from 'argon2';
 import { IsEmail } from 'class-validator';
 import {
-  BeforeInsert,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
+    BeforeInsert,
+    Column,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Role } from '@app/contracts/role/role.entity';
-import { Office } from '@app/contracts/office/office.entity';
-import { Sale } from '@app/contracts/sale/sale.entity';
 
 @Entity()
 export class User {
@@ -27,9 +27,14 @@ export class User {
   @IsEmail()
   email: string;
 
+  @Column({ nullable: true, unique: true })
+  googleId: string;
+
   @BeforeInsert()
   async hashPassword() {
-    this.password = await argon2.hash(this.password);
+    if (this.password) {
+      this.password = await argon2.hash(this.password);
+    }
   }
 
   @ManyToOne(() => Role, (role) => role.users, { eager: true })

@@ -1,4 +1,3 @@
-import { handleTypeOrmError } from '@app/common/db-error.util';
 import { Author } from '@app/contracts/author/author.entity';
 import { BookMaterial } from '@app/contracts/book-material/book-material.entity';
 import { Book } from '@app/contracts/book/book.entity';
@@ -7,9 +6,12 @@ import { UpdateBookDto } from '@app/contracts/book/update-book.dto';
 import { Category } from '@app/contracts/category/category.entity';
 import { MaterialDto } from '@app/contracts/material/material.dto';
 import { Material } from '@app/contracts/material/material.entity';
+import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { firstValueFrom } from 'rxjs';
 import { DeleteResult, Repository } from 'typeorm';
+import { GoogleSheetsService } from './google-sheets.service';
 
 @Injectable()
 export class BookService {
@@ -22,7 +24,9 @@ export class BookService {
     private materialRepository: Repository<Material>,
     @InjectRepository( BookMaterial )
     private bookMaterialRepository: Repository<BookMaterial>,
-  ) { }
+    private httpService: HttpService,
+    private googleSheetsService: GoogleSheetsService,
+  ) {}
 
   async create( createBookDto: CreateBookDto ): Promise<Book> {
     const { categoryIds, authorIds, materials, quantity } = createBookDto;
@@ -251,5 +255,49 @@ export class BookService {
         } ),
       );
     } );
+  }
+
+  async getPriceInCurrency( id: number, currency: string ) {
+    const book = await this.findOne( id );
+
+    const { data: rate } = await firstValueFrom(
+      this.httpService.get(
+        `https://api.nbrb.by/exrates/rates/${ encodeURIComponent( currency ) }?parammode=2`,
+      ),
+    ).catch( () => {
+      throw new HttpException(
+        { message: `Currency "${ currency }" not found in NBRB rates` },
+        HttpStatus.BAD_REQUEST,
+      );
+    } );
+
+    const bookValue = typeof book.value === 'string'
+      ? parseFloat( ( book.value as string ).replace( /[^0-9.-]/g, '' ) )
+      : book.value;
+
+    const convertedAmount = bookValue / ( rate.Cur_OfficialRate / rate.Cur_Scale );
+
+    return {
+      bookId: book.id,
+      bookName: book.name,
+      originalPrice: {
+        amount: bookValue,
+        currency: 'BYN',
+      },
+      convertedPrice: {
+        amount: Math.round( convertedAmount * 100 ) / 100,
+        currency: rate.Cur_Abbreviation,
+      },
+      rate: {
+        officialRate: rate.Cur_OfficialRate,
+        scale: rate.Cur_Scale,
+        date: rate.Date,
+      },
+    };
+  }
+
+  async exportToSheets(): Promise<{ spreadsheetUrl: string }> {
+    const books = await this.findAll();
+    return this.googleSheetsService.exportBooks(books);
   }
 }

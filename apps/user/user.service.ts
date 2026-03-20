@@ -179,6 +179,34 @@ export class UserService {
     } );
   }
 
+  async findOrCreateByGoogle( dto: { email: string; name: string; googleId: string } ): Promise<UserRO> {
+    let user = await this.userRepository.findOneBy( { email: dto.email } );
+
+    if ( user ) {
+      if ( !user.googleId ) {
+        user.googleId = dto.googleId;
+        user = await this.userRepository.save( user );
+      }
+
+      return this.#buildUserRO( user );
+    }
+
+    const clientRole = await this.roleRepository.findOneBy( { name: 'client' } );
+
+    if ( !clientRole ) {
+      throw new HttpException( { message: 'Default role not found' }, HttpStatus.INTERNAL_SERVER_ERROR );
+    }
+
+    const newUser = new User();
+    newUser.name = dto.name;
+    newUser.email = dto.email;
+    newUser.googleId = dto.googleId;
+    newUser.role = clientRole;
+
+    const savedUser = await this.userRepository.save( newUser );
+    return this.#buildUserRO( savedUser );
+  }
+
   #buildUserRO( user: User, withToken: boolean = false ) {
     const data: UserData = {
       id: user.id,

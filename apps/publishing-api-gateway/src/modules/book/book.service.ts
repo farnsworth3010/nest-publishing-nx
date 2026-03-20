@@ -1,12 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { BOOK_CLIENT } from '../../constant';
+import { Book } from '@app/contracts/book/book.entity';
 import { BOOK_PATTERNS } from '@app/contracts/book/book.pattern';
 import { CreateBookDto } from '@app/contracts/book/create-book.dto';
 import { UpdateBookDto } from '@app/contracts/book/update-book.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
-import { Book } from '@app/contracts/book/book.entity';
 import { DeleteResult } from 'typeorm';
+import { BOOK_CLIENT } from '../../constant';
 
 @Injectable()
 export class BookService {
@@ -30,5 +30,13 @@ export class BookService {
 
   remove(id: number): Observable<DeleteResult> {
     return this.bookClient.send(BOOK_PATTERNS.REMOVE, id);
+  }
+
+  getPriceInCurrency(id: number, currency: string): Observable<any> {
+    return this.bookClient.send(BOOK_PATTERNS.GET_PRICE_IN_CURRENCY, { id, currency });
+  }
+
+  exportToSheets(): Observable<any> {
+    return this.bookClient.send(BOOK_PATTERNS.EXPORT_TO_SHEETS, {});
   }
 }
