@@ -40,4 +40,14 @@ export class SaleController {
   exportToDocs( @Payload() { startDate, endDate }: { startDate: string; endDate: string } ) {
     return this.saleService.exportToDocs( startDate, endDate );
   }
+
+  @MessagePattern( SALE_PATTERNS.ADD_TO_CALENDAR )
+  addToCalendar() {
+    return this.saleService.addToCalendar();
+  }
+
+  @MessagePattern( SALE_PATTERNS.GET_CALENDAR_EVENTS )
+  getCalendarEvents( @Payload() { startDate, endDate }: { startDate: string; endDate: string } ) {
+    return this.saleService.getCalendarEvents( startDate, endDate );
+  }
 }

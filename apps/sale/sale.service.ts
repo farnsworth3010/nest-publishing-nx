@@ -8,6 +8,7 @@ import { User } from '@app/contracts/user/user.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, DeleteResult, Repository } from 'typeorm';
+import { GoogleCalendarService } from './google-calendar.service';
 import { GoogleDocsService } from './google-docs.service';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class SaleService {
     @InjectRepository( Office ) private officeRepository: Repository<Office>,
     @InjectRepository( Book ) private bookRepository: Repository<Book>,
     private googleDocsService: GoogleDocsService,
+    private googleCalendarService: GoogleCalendarService,
   ) { }
 
   async create( createSaleDto: CreateSaleDto ): Promise<Sale> {
@@ -94,5 +96,16 @@ export class SaleService {
   async exportToDocs( startDate: string, endDate: string ): Promise<{ documentUrl: string }> {
     const sales = await this.findByPeriod( startDate, endDate );
     return this.googleDocsService.exportSalesReport( sales, startDate, endDate );
+  }
+
+  async addToCalendar(): Promise<{ calendarId: string; eventsCreated: number }> {
+    const sales = await this.saleRepository.find( {
+      relations: [ 'book', 'user', 'office' ],
+    } );
+    return this.googleCalendarService.addSalesToCalendar( sales );
+  }
+
+  async getCalendarEvents( startDate: string, endDate: string ) {
+    return this.googleCalendarService.getCalendarEvents( startDate, endDate );
   }
 }

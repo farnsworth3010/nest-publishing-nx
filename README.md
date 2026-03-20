@@ -336,3 +336,80 @@ Client → POST /sale/export/docs?startDate=...&endDate=...
           → Return documentUrl
 ```
 
+## Google Calendar Sales Integration
+
+Add all sales as all-day events to a Google Calendar and view calendar events for a period. Uses the same Service Account credentials — just enable the **Google Calendar API** in Google Cloud Console.
+
+### Prerequisites
+
+- Same Service Account env vars (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`)
+- **Google Calendar API** enabled in Google Cloud Console
+- Share your Google Calendar with the Service Account email (grant "Make changes to events"), or use a calendar the Service Account owns
+
+### Additional Environment Variable
+
+Add to your `.env`:
+
+```dotenv
+GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
+```
+
+If omitted, defaults to `primary` (the Service Account's own calendar).
+
+### API Endpoints
+
+**Add all sales to calendar:**
+
+```
+POST /sale/calendar
+Authorization: Bearer <token>
+Role: ADMIN
+```
+
+Response:
+
+```json
+{
+  "calendarId": "...",
+  "eventsCreated": 42
+}
+```
+
+**View calendar events for a period:**
+
+```
+GET /sale/calendar?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+Authorization: Bearer <token>
+Role: ADMIN
+```
+
+Response: Array of Google Calendar event objects.
+
+### Event Format
+
+Each sale becomes an all-day event with:
+
+- **Summary:** "Sale: {Book Name} x{amount}"
+- **Description:** Book, Buyer, Office, Amount, Price (BYN), External flag, Sale ID
+
+### Flow
+
+```
+POST /sale/calendar
+  → Gateway (AuthGuard + RolesGuard ADMIN)
+    → TCP → Sale Microservice
+      → SaleService.addToCalendar()
+        → findAll() sales with relations [book, user, office]
+        → GoogleCalendarService.addSalesToCalendar()
+          → Create all-day events via Calendar API
+          → Return { calendarId, eventsCreated }
+
+GET /sale/calendar?startDate=...&endDate=...
+  → Gateway (AuthGuard + RolesGuard ADMIN)
+    → TCP → Sale Microservice
+      → SaleService.getCalendarEvents(startDate, endDate)
+        → GoogleCalendarService.getCalendarEvents()
+          → List events via Calendar API
+          → Return event array
+```
+

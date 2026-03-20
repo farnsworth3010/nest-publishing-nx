@@ -35,4 +35,12 @@ export class SaleService {
   exportToDocs( startDate: string, endDate: string ): Observable<any> {
     return this.client.send( SALE_PATTERNS.EXPORT_TO_DOCS, { startDate, endDate } );
   }
+
+  addToCalendar(): Observable<any> {
+    return this.client.send( SALE_PATTERNS.ADD_TO_CALENDAR, {} );
+  }
+
+  getCalendarEvents( startDate: string, endDate: string ): Observable<any> {
+    return this.client.send( SALE_PATTERNS.GET_CALENDAR_EVENTS, { startDate, endDate } );
+  }
 }

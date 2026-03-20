@@ -57,6 +57,27 @@ export class SaleController {
     return this.saleService.findAll();
   }
 
+  @Post( 'calendar' )
+  @Roles( UserRole.ADMIN )
+  @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiOkResponse( { description: 'All sales added to Google Calendar' } )
+  addToCalendar(): Observable<any> {
+    return this.saleService.addToCalendar();
+  }
+
+  @Get( 'calendar' )
+  @Roles( UserRole.ADMIN )
+  @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiOkResponse( { description: 'Google Calendar events for the given period' } )
+  getCalendarEvents(
+    @Query( 'startDate' ) startDate: string,
+    @Query( 'endDate' ) endDate: string,
+  ): Observable<any> {
+    return this.saleService.getCalendarEvents( startDate, endDate );
+  }
+
   @Get( ':id' )
   @Roles( UserRole.ADMIN, UserRole.SALES )
   @UseGuards( AuthGuard, RolesGuard )
