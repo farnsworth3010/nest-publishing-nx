@@ -31,4 +31,8 @@ export class SaleService {
   remove( id: number ): Observable<DeleteResult> {
     return this.client.send( SALE_PATTERNS.REMOVE, id );
   }
+
+  exportToDocs( startDate: string, endDate: string ): Observable<any> {
+    return this.client.send( SALE_PATTERNS.EXPORT_TO_DOCS, { startDate, endDate } );
+  }
 }

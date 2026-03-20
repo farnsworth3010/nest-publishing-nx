@@ -6,25 +6,26 @@ import { Roles } from '@app/gateway/decorators/roles.decorator';
 import { AuthGuard } from '@app/gateway/guards/auth.guard';
 import { RolesGuard } from '@app/gateway/guards/roles.guard';
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Query,
+    UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiParam,
-  ApiTags,
-  ApiUnauthorizedResponse,
+    ApiBearerAuth,
+    ApiCreatedResponse,
+    ApiForbiddenResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+    ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
@@ -93,5 +94,17 @@ export class SaleController {
   @ApiForbiddenResponse( { description: 'Forbidden' } )
   remove( @Param( 'id', new ParseIntPipe() ) id: number ): Observable<DeleteResult> {
     return this.saleService.remove( id );
+  }
+
+  @Post( 'export/docs' )
+  @Roles( UserRole.ADMIN, UserRole.SALES )
+  @UseGuards( AuthGuard, RolesGuard )
+  @ApiBearerAuth()
+  @ApiOkResponse( { description: 'Google Docs document URL with sales report' } )
+  exportToDocs(
+    @Query( 'startDate' ) startDate: string,
+    @Query( 'endDate' ) endDate: string,
+  ): Observable<any> {
+    return this.saleService.exportToDocs( startDate, endDate );
   }
 }

@@ -35,4 +35,9 @@ export class SaleController {
   remove( @Payload() id: number ): Promise<DeleteResult> {
     return this.saleService.remove( id );
   }
+
+  @MessagePattern( SALE_PATTERNS.EXPORT_TO_DOCS )
+  exportToDocs( @Payload() { startDate, endDate }: { startDate: string; endDate: string } ) {
+    return this.saleService.exportToDocs( startDate, endDate );
+  }
 }

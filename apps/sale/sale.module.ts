@@ -6,6 +6,7 @@ import { TypeOrmConfigService } from '@config/database.config';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GoogleDocsService } from './google-docs.service';
 import { SaleController } from './sale.controller';
 import { SaleService } from './sale.service';
 
@@ -20,6 +21,6 @@ import { SaleService } from './sale.service';
     } ),
   ],
   controllers: [ SaleController ],
-  providers: [ SaleService ],
+  providers: [ SaleService, GoogleDocsService ],
 } )
 export class SaleModule { }

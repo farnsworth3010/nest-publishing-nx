@@ -1,3 +1,4 @@
+import { handleTypeOrmError } from '@app/common/db-error.util';
 import { Book } from '@app/contracts/book/book.entity';
 import { Office } from '@app/contracts/office/office.entity';
 import { CreateSaleDto } from '@app/contracts/sale/create-sale.dto';
@@ -6,8 +7,8 @@ import { UpdateSaleDto } from '@app/contracts/sale/update-sale.dto';
 import { User } from '@app/contracts/user/user.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
-import { handleTypeOrmError } from '@app/common/db-error.util';
+import { Between, DeleteResult, Repository } from 'typeorm';
+import { GoogleDocsService } from './google-docs.service';
 
 @Injectable()
 export class SaleService {
@@ -16,6 +17,7 @@ export class SaleService {
     @InjectRepository( User ) private userRepository: Repository<User>,
     @InjectRepository( Office ) private officeRepository: Repository<Office>,
     @InjectRepository( Book ) private bookRepository: Repository<Book>,
+    private googleDocsService: GoogleDocsService,
   ) { }
 
   async create( createSaleDto: CreateSaleDto ): Promise<Sale> {
@@ -80,5 +82,17 @@ export class SaleService {
     } catch ( error ) {
       handleTypeOrmError( error );
     }
+  }
+
+  async findByPeriod( startDate: string, endDate: string ): Promise<Sale[]> {
+    return this.saleRepository.find( {
+      where: { date: Between( new Date( startDate ), new Date( endDate ) ) },
+      relations: [ 'book', 'user', 'office' ],
+    } );
+  }
+
+  async exportToDocs( startDate: string, endDate: string ): Promise<{ documentUrl: string }> {
+    const sales = await this.findByPeriod( startDate, endDate );
+    return this.googleDocsService.exportSalesReport( sales, startDate, endDate );
   }
 }

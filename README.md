@@ -280,3 +280,59 @@ Client → POST /book/export/sheets
           → Return spreadsheetUrl
 ```
 
+## Google Docs Sales Export
+
+Export book sales for a selected date range to a formatted Google Docs document. Uses the same Service Account credentials as the Sheets export — no additional setup needed (just enable the **Google Docs API** in your Google Cloud project).
+
+### Prerequisites
+
+- Same Service Account env vars as Google Sheets Export (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`, `GOOGLE_SHEETS_SHARE_EMAIL`)
+- **Google Docs API** enabled in Google Cloud Console (in addition to Sheets/Drive APIs)
+
+### API Endpoint
+
+```
+POST /sale/export/docs?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
+Authorization: Bearer <token>
+Roles: ADMIN, SALES
+```
+
+**Query Parameters:**
+
+| Parameter   | Type   | Description                          |
+|-------------|--------|--------------------------------------|
+| `startDate` | string | Start of period (ISO date, inclusive) |
+| `endDate`   | string | End of period (ISO date, inclusive)   |
+
+**Response:**
+
+```json
+{
+  "documentUrl": "https://docs.google.com/document/d/<id>/edit"
+}
+```
+
+### Document Contents
+
+The generated Google Doc includes:
+
+- **Title:** "Sales Report: {startDate} — {endDate}"
+- **Summary:** period, total transactions, total items sold, total revenue (BYN)
+- **Table** with columns: #, Date, Book, Buyer, Office, Amount, Price (BYN), External
+
+### Flow
+
+```
+Client → POST /sale/export/docs?startDate=...&endDate=...
+  → Gateway (AuthGuard + RolesGuard ADMIN/SALES)
+    → TCP → Sale Microservice
+      → SaleService.exportToDocs(startDate, endDate)
+        → findByPeriod() — query sales with date Between()
+        → GoogleDocsService.exportSalesReport()
+          → Create document via Docs API
+          → Insert summary text + table with sales data
+          → Bold header row
+          → Share with configured email via Drive API
+          → Return documentUrl
+```
+
