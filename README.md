@@ -4,6 +4,17 @@
 
 This information system manages data about books, authors, publication dates, materials used for publishing, wholesale buyers, and the number of books sold to buyers.
 
+## Diagrams
+
+The `diagrams` folder contains source architecture and analysis diagrams used to document the system:
+
+- `deployment.drawio` - deployment/infrastructure view of the system components.
+- `er.drawio` - entity-relationship diagram of the main database tables and links.
+- `IDEF0.drawio` - functional decomposition diagram of core business processes.
+- `usecase.drawio` - use case diagram showing actor interactions with the system.
+
+These files are editable in draw.io-compatible tools and can be exported to PNG/PDF for reports.
+
 ### Roles and Permissions
 
 - **Administrator (Manager)**
@@ -222,6 +233,10 @@ Authorization: Bearer <token>
 - **Available currencies:** USD, EUR, RUB, GBP, PLN, UAH, CNY, JPY, CHF, CAD, and [more](https://api.nbrb.by/exrates/currencies)
 
 No API key or additional configuration is required — the NBRB API is public.
+
+## Frontend Google Maps Integration
+
+Google Maps is integrated on the frontend to display location-based data (for example, offices and related geographic points) on an interactive map.
 
 ## Google Sheets Export
 
